@@ -43,12 +43,12 @@ class AnalyticsReportService
                 'events' => (clone $events)->count(),
             ],
             'trend' => $this->trend($start, $end),
-            'topPages' => $this->topGroup($views, 'path'),
-            'topSources' => $this->topGroup($sessions, 'source'),
-            'topCountries' => $this->topGroup($sessions, 'country'),
-            'topDevices' => $this->topGroup($sessions, 'device'),
-            'topBrowsers' => $this->topGroup($sessions, 'browser'),
-            'eventSummary' => $this->topGroup($events, 'event_type'),
+            'topPages' => $this->topGroup(clone $views, 'path'),
+            'topSources' => $this->topGroup(clone $sessions, 'source'),
+            'topCountries' => $this->topGroup(clone $sessions, 'country'),
+            'topDevices' => $this->topGroup(clone $sessions, 'device'),
+            'topBrowsers' => $this->topGroup(clone $sessions, 'browser'),
+            'eventSummary' => $this->topGroup(clone $events, 'event_type'),
         ];
     }
 
@@ -94,10 +94,8 @@ class AnalyticsReportService
     public function audience(Request $request): array
     {
         [$start, $end] = $this->range($request);
-        $sessions = AnalyticsSession::query()->whereBetween('started_at', [$start, $end]);
-
         return [
-            'countries' => $this->topGroup($sessions, 'country'),
+            'countries' => $this->topGroup(AnalyticsSession::query()->whereBetween('started_at', [$start, $end]), 'country'),
             'cities' => $this->topGroup(AnalyticsSession::query()->whereBetween('started_at', [$start, $end]), 'city'),
             'devices' => $this->topGroup(AnalyticsSession::query()->whereBetween('started_at', [$start, $end]), 'device'),
             'browsers' => $this->topGroup(AnalyticsSession::query()->whereBetween('started_at', [$start, $end]), 'browser'),
