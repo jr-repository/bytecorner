@@ -2,9 +2,12 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import type { PortfolioItem, Article, Service } from "@/lib/storage";
 import { useLang } from "@/contexts/LangContext";
+import { portfolioWhatsappUrl } from "@/lib/whatsapp";
 
 export function PortfolioCard({ item, variant = "stack" }: { item: PortfolioItem; variant?: "stack" | "side" | "compact" | "featured" }) {
   const { pick, t } = useLang();
+  const title = pick(item.title);
+  const themeUrl = portfolioWhatsappUrl(item, title);
   if (variant === "featured") {
     return (
       <Link to={`/portfolio/${item.slug}`} className="group relative block overflow-hidden rounded-3xl">
@@ -60,19 +63,26 @@ export function PortfolioCard({ item, variant = "stack" }: { item: PortfolioItem
   }
   // stack
   return (
-    <Link to={`/portfolio/${item.slug}`} className="group block rounded-3xl glass overflow-hidden hover:-translate-y-1 transition-all">
-      <div className="aspect-video bg-soft overflow-hidden">
+    <div className="group flex h-full flex-col rounded-3xl glass overflow-hidden hover:-translate-y-1 transition-all">
+      <Link to={`/portfolio/${item.slug}`} className="aspect-video bg-soft overflow-hidden">
         <img src={item.cover} alt="" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" />
-      </div>
+      </Link>
       <div className="p-5">
         <span className="rounded-full bg-teal/15 text-teal-deep text-[10px] font-semibold uppercase px-2 py-0.5">{item.category}</span>
-        <h3 className="mt-2 font-display text-lg font-semibold">{pick(item.title)}</h3>
+        <Link to={`/portfolio/${item.slug}`} className="block">
+          <h3 className="mt-2 font-display text-lg font-semibold">{title}</h3>
+        </Link>
         <p className="mt-2 text-sm text-muted line-clamp-2">{pick(item.description)}</p>
-        <p className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-teal-deep">
-          {t("cta_view_detail")} <ArrowUpRight className="size-4" />
-        </p>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <Link to={`/portfolio/${item.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-teal-deep">
+            {t("cta_view_detail")} <ArrowUpRight className="size-4" />
+          </Link>
+          <a href={themeUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-medium text-teal-deep">
+            Gunakan Tema <ArrowUpRight className="size-4" />
+          </a>
+        </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

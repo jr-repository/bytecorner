@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useData } from "@/contexts/DataContext";
 import { Button } from "@/components/Button";
 import { ImageInput, MultiImageInput } from "@/components/ImageInput";
@@ -31,6 +31,7 @@ export default function AdminPortfolio() {
   const { portfolio, setPortfolio } = useData();
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
   const [tab, setTab] = useState<(typeof TABS)[number]>("General");
+  const categories = useMemo(() => Array.from(new Set(portfolio.map((p) => p.category).filter(Boolean))).sort(), [portfolio]);
 
   const open = (item: PortfolioItem) => { setEditing(item); setTab("General"); };
 
@@ -94,7 +95,7 @@ export default function AdminPortfolio() {
               <div className="grid sm:grid-cols-2 gap-3">
                 <div className="field-group"><label className="form-label">Slug</label><input className="glass-input" value={editing.slug} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} /></div>
                 <div className="field-group"><label className="form-label">Client</label><input className="glass-input" value={editing.client} onChange={(e) => setEditing({ ...editing, client: e.target.value })} /></div>
-                <div className="field-group"><label className="form-label">Category</label><input className="glass-input" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} /></div>
+                <div className="field-group"><label className="form-label">Category</label><input list="portfolio-category-options" className="glass-input" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} /><datalist id="portfolio-category-options">{categories.map((category) => <option key={category} value={category} />)}</datalist></div>
                 <div className="field-group"><label className="form-label">Date</label><input type="date" className="glass-input" value={editing.date} onChange={(e) => setEditing({ ...editing, date: e.target.value })} /></div>
                 <div className="field-group"><label className="form-label">Title (ID)</label><input className="glass-input" value={editing.title.id} onChange={(e) => setEditing({ ...editing, title: { ...editing.title, id: e.target.value } })} /></div>
                 <div className="field-group"><label className="form-label">Title (EN)</label><input className="glass-input" value={editing.title.en} onChange={(e) => setEditing({ ...editing, title: { ...editing.title, en: e.target.value } })} /></div>
@@ -112,10 +113,14 @@ export default function AdminPortfolio() {
 
             {tab === "Content" && (
               <div className="grid gap-3">
+                <div className="field-group"><label className="form-label">Description (ID)</label><textarea rows={2} className="glass-input" value={editing.description.id} onChange={(e) => setEditing({ ...editing, description: { ...editing.description, id: e.target.value } })} /></div>
                 <div className="field-group"><label className="form-label">Description (EN)</label><textarea rows={2} className="glass-input" value={editing.description.en} onChange={(e) => setEditing({ ...editing, description: { en: e.target.value, id: editing.description.id || e.target.value } })} /></div>
+                <div className="field-group"><label className="form-label">Overview (ID)</label><textarea rows={4} className="glass-input" value={editing.overview.id} onChange={(e) => setEditing({ ...editing, overview: { ...editing.overview, id: e.target.value } })} /></div>
                 <div className="field-group"><label className="form-label">Overview (EN)</label><textarea rows={4} className="glass-input" value={editing.overview.en} onChange={(e) => setEditing({ ...editing, overview: { en: e.target.value, id: editing.overview.id || e.target.value } })} /></div>
                 <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="field-group"><label className="form-label">Challenge (ID)</label><textarea rows={4} className="glass-input" value={editing.challenge.id} onChange={(e) => setEditing({ ...editing, challenge: { ...editing.challenge, id: e.target.value } })} /></div>
                   <div className="field-group"><label className="form-label">Challenge (EN)</label><textarea rows={4} className="glass-input" value={editing.challenge.en} onChange={(e) => setEditing({ ...editing, challenge: { en: e.target.value, id: editing.challenge.id || e.target.value } })} /></div>
+                  <div className="field-group"><label className="form-label">Solution (ID)</label><textarea rows={4} className="glass-input" value={editing.solution.id} onChange={(e) => setEditing({ ...editing, solution: { ...editing.solution, id: e.target.value } })} /></div>
                   <div className="field-group"><label className="form-label">Solution (EN)</label><textarea rows={4} className="glass-input" value={editing.solution.en} onChange={(e) => setEditing({ ...editing, solution: { en: e.target.value, id: editing.solution.id || e.target.value } })} /></div>
                 </div>
               </div>

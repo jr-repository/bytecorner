@@ -14,11 +14,9 @@ export default function Portfolio() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("all");
   const cats = useMemo(() => ["all", ...Array.from(new Set(portfolio.map((p) => p.category)))], [portfolio]);
-  const featured = portfolio.find((p) => p.featured) ?? portfolio[0];
   const filtered = portfolio.filter((p) => (cat === "all" || p.category === cat) && (
     !q || p.title[lang].toLowerCase().includes(q.toLowerCase()) || p.client.toLowerCase().includes(q.toLowerCase())
   ));
-  const grid = filtered.filter((p) => p.id !== featured?.id);
 
   return (
     <>
@@ -41,9 +39,8 @@ export default function Portfolio() {
             </button>
           ))}
         </div>
-        {featured && cat === "all" && !q && <PortfolioCard item={featured} variant="featured" />}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {grid.map((p, i) => <PortfolioCard key={p.id} item={p} variant={i % 5 === 0 ? "stack" : "compact"} />)}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {filtered.map((p) => <PortfolioCard key={p.id} item={p} variant="stack" />)}
         </div>
       </section>
 

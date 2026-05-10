@@ -104,6 +104,7 @@ export default function AdminArticles() {
                 </div>
                 <div className="field-group"><label className="form-label">Title (ID)</label><input className="glass-input" value={editing.title.id} onChange={(e) => setEditing({ ...editing, title: { ...editing.title, id: e.target.value } })} /></div>
                 <div className="field-group"><label className="form-label">Title (EN)</label><input className="glass-input" value={editing.title.en} onChange={(e) => setEditing({ ...editing, title: { ...editing.title, en: e.target.value } })} /></div>
+                <div className="field-group sm:col-span-2"><label className="form-label">Excerpt (ID)</label><textarea rows={2} className="glass-input" value={editing.excerpt.id} onChange={(e) => setEditing({ ...editing, excerpt: { ...editing.excerpt, id: e.target.value } })} /></div>
                 <div className="field-group sm:col-span-2"><label className="form-label">Excerpt (EN)</label><textarea rows={2} className="glass-input" value={editing.excerpt.en} onChange={(e) => setEditing({ ...editing, excerpt: { en: e.target.value, id: editing.excerpt.id || e.target.value } })} /></div>
                 <div className="field-group sm:col-span-2"><label className="form-label">Tags (comma-separated)</label>
                   <input className="glass-input" value={editing.tags.join(", ")} onChange={(e) => setEditing({ ...editing, tags: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} />
@@ -112,9 +113,15 @@ export default function AdminArticles() {
             )}
 
             {tab === "Content" && (
-              <div className="space-y-2">
-                <label className="form-label">Body (EN)</label>
-                <RichTextEditor value={editing.content.en} onChange={(v) => setEditing({ ...editing, content: { en: v, id: editing.content.id || v } })} />
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <label className="form-label">Body (ID)</label>
+                  <RichTextEditor value={editing.content.id} onChange={(v) => setEditing({ ...editing, content: { ...editing.content, id: v } })} />
+                </div>
+                <div className="space-y-2">
+                  <label className="form-label">Body (EN)</label>
+                  <RichTextEditor value={editing.content.en} onChange={(v) => setEditing({ ...editing, content: { en: v, id: editing.content.id || v } })} />
+                </div>
               </div>
             )}
 

@@ -1,4 +1,4 @@
-import { useRef, type ChangeEvent } from "react";
+import { useRef, type ChangeEvent, type ClipboardEvent } from "react";
 import { ImagePlus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,8 +17,21 @@ export function ImageInput({ value, onChange, className, label }: { value?: stri
     const f = e.target.files?.[0]; if (!f) return;
     onChange(await fileToDataUrl(f));
   };
+  const handlePaste = async (e: ClipboardEvent<HTMLDivElement>) => {
+    const image = Array.from(e.clipboardData.files).find((file) => file.type.startsWith("image/"));
+    if (image) {
+      e.preventDefault();
+      onChange(await fileToDataUrl(image));
+      return;
+    }
+
+    const text = e.clipboardData.getData("text/plain");
+    if (text && /^https?:\/\/.+/i.test(text.trim())) {
+      onChange(text.trim());
+    }
+  };
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-2", className)} onPaste={handlePaste} tabIndex={0}>
       {label && <label className="text-sm font-medium block">{label}</label>}
       <div className="aspect-video w-full rounded-2xl bg-soft border border-dashed border-ink/15 grid place-items-center overflow-hidden">
         {value ? <img src={value} alt="" className="w-full h-full object-cover" />
@@ -53,8 +66,22 @@ export function MultiImageInput({ value, onChange }: { value: string[]; onChange
     const urls = await Promise.all(files.map(fileToDataUrl));
     onChange([...value, ...urls]);
   };
+  const handlePaste = async (e: ClipboardEvent<HTMLDivElement>) => {
+    const images = Array.from(e.clipboardData.files).filter((file) => file.type.startsWith("image/"));
+    if (images.length > 0) {
+      e.preventDefault();
+      const urls = await Promise.all(images.map(fileToDataUrl));
+      onChange([...value, ...urls]);
+      return;
+    }
+
+    const text = e.clipboardData.getData("text/plain");
+    if (text && /^https?:\/\/.+/i.test(text.trim())) {
+      onChange([...value, text.trim()]);
+    }
+  };
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" onPaste={handlePaste} tabIndex={0}>
       <div className="grid grid-cols-3 gap-2">
         {value.map((src, i) => (
           <div key={i} className="relative group aspect-square rounded-xl overflow-hidden bg-soft">

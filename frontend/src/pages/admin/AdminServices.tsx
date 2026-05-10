@@ -103,7 +103,9 @@ export default function AdminServices() {
               <div className="grid sm:grid-cols-2 gap-3">
                 <div className="field-group"><label className="form-label">Title (ID)</label><input className="glass-input" value={editing.title.id} onChange={(e) => setEditing({ ...editing, title: { ...editing.title, id: e.target.value } })} /></div>
                 <div className="field-group"><label className="form-label">Title (EN)</label><input className="glass-input" value={editing.title.en} onChange={(e) => setEditing({ ...editing, title: { ...editing.title, en: e.target.value } })} /></div>
+                <div className="field-group sm:col-span-2"><label className="form-label">Excerpt (ID)</label><textarea rows={2} className="glass-input" value={editing.excerpt.id} onChange={(e) => setEditing({ ...editing, excerpt: { ...editing.excerpt, id: e.target.value } })} /></div>
                 <div className="field-group sm:col-span-2"><label className="form-label">Excerpt (EN)</label><textarea rows={2} className="glass-input" value={editing.excerpt.en} onChange={(e) => setEditing({ ...editing, excerpt: { ...editing.excerpt, en: e.target.value, id: editing.excerpt.id || e.target.value } })} /></div>
+                <div className="field-group sm:col-span-2"><label className="form-label">Description (ID)</label><textarea rows={4} className="glass-input" value={editing.description.id} onChange={(e) => setEditing({ ...editing, description: { ...editing.description, id: e.target.value } })} /></div>
                 <div className="field-group sm:col-span-2"><label className="form-label">Description (EN)</label><textarea rows={4} className="glass-input" value={editing.description.en} onChange={(e) => setEditing({ ...editing, description: { ...editing.description, en: e.target.value, id: editing.description.id || e.target.value } })} /></div>
               </div>
             </section>
