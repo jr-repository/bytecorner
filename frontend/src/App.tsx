@@ -28,6 +28,7 @@ import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminMedia from "@/pages/admin/AdminMedia";
 import AdminIG from "@/pages/admin/AdminIG";
 import AdminProfile from "@/pages/admin/AdminProfile";
+import AdminAnalytics from "@/pages/admin/AdminAnalytics";
 
 function RequireAuth() {
   const { user, token } = useAuth();
@@ -66,6 +67,8 @@ export default function App() {
                 <Route path="logos" element={<AdminLogos />} />
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="profile" element={<AdminProfile />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="analytics/:section" element={<AdminAnalytics />} />
                 <Route path="media" element={<AdminMedia />} />
                 <Route path="media-library" element={<AdminMedia />} />
                 <Route path="ig" element={<AdminIG />} />

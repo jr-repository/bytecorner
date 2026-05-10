@@ -10,11 +10,13 @@ use App\Models\Article;
 use App\Models\ClientLogo;
 use App\Models\PortfolioProject;
 use App\Models\ServiceItem;
+use App\Services\AnalyticsReportService;
 use App\Services\ApiResponseService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function __invoke()
+    public function __invoke(Request $request, AnalyticsReportService $analytics)
     {
         $services = ServiceItem::all();
         $portfolio = PortfolioProject::all();
@@ -44,6 +46,8 @@ class DashboardController extends Controller
             ->values()
             ->take(6);
 
+        $overview = $analytics->overview($request);
+
         return ApiResponseService::success([
             'totals' => [
                 'services' => $services->count(),
@@ -53,6 +57,10 @@ class DashboardController extends Controller
                 'publishedServices' => $services->where('status', 'published')->count(),
                 'publishedPortfolio' => $portfolio->where('status', 'published')->count(),
                 'publishedArticles' => $articles->where('status', 'published')->count(),
+                'visitors' => $overview['totals']['visitors'],
+                'pageViews' => $overview['totals']['pageViews'],
+                'uniqueVisitors' => $overview['totals']['uniqueVisitors'],
+                'events' => $overview['totals']['events'],
             ],
             'latestContent' => $latest,
             'latestServices' => ServiceResource::collection($services->sortByDesc('created_at')->take(5)),
@@ -69,22 +77,8 @@ class DashboardController extends Controller
                 'articles' => $articles->countBy('category'),
             ],
             'monthlyActivity' => $this->monthlyActivity($services, $portfolio, $articles),
-            'trend' => [
-                ['d' => 'Mon', 'v' => 4200, 'p' => 3100, 's' => 1800],
-                ['d' => 'Tue', 'v' => 4800, 'p' => 3600, 's' => 2100],
-                ['d' => 'Wed', 'v' => 5400, 'p' => 4100, 's' => 2400],
-                ['d' => 'Thu', 'v' => 6100, 'p' => 4700, 's' => 2700],
-                ['d' => 'Fri', 'v' => 5800, 'p' => 4500, 's' => 2500],
-                ['d' => 'Sat', 'v' => 6400, 'p' => 5000, 's' => 2900],
-                ['d' => 'Sun', 'v' => 7100, 'p' => 5400, 's' => 3200],
-            ],
-            'topPages' => [
-                ['name' => '/', 'v' => 28592, 'c' => '#6CC6CB'],
-                ['name' => '/services', 'v' => 16421, 'c' => '#4FB7C5'],
-                ['name' => '/portfolio', 'v' => 13876, 'c' => '#A7F3D0'],
-                ['name' => '/articles', 'v' => 8358, 'c' => '#FFD6A5'],
-                ['name' => 'Others', 'v' => 4000, 'c' => '#EAE5C9'],
-            ],
+            'trend' => $overview['trend'],
+            'topPages' => collect($overview['topPages'])->map(fn ($row, $i) => ['name' => $row['name'], 'v' => $row['value'], 'c' => ['#6CC6CB', '#4FB7C5', '#A7F3D0', '#FFD6A5', '#EAE5C9'][$i % 5]])->values(),
         ]);
     }
 

@@ -4,9 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { ScrollToTopButton } from "./ScrollToTopButton";
+import { useAnalyticsTracking } from "@/hooks/useAnalyticsTracking";
 
 export function PublicLayout() {
   const loc = useLocation();
+  useAnalyticsTracking();
   useEffect(() => { window.scrollTo({ top: 0 }); }, [loc.pathname]);
 
   return (

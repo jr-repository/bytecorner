@@ -57,6 +57,13 @@ export const publicApi = {
   logos: () => apiRequest<any[]>("/client-logos"),
 };
 
+export const analyticsApi = {
+  track: (payload: Record<string, unknown>) => apiRequest<{ tracked: boolean }>("/analytics/track", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  }),
+};
+
 export const authApi = {
   login: (email: string, password: string) => apiRequest<{ token: string; user: any }>("/auth/login", {
     method: "POST",
@@ -73,6 +80,15 @@ export const authApi = {
 
 export const adminApi = {
   dashboard: () => apiRequest<any>("/admin/dashboard"),
+  analytics: {
+    overview: (query = "") => apiRequest<any>(`/admin/analytics/overview${query}`),
+    traffic: (query = "") => apiRequest<any>(`/admin/analytics/traffic${query}`),
+    pages: (query = "") => apiRequest<any>(`/admin/analytics/pages${query}`),
+    events: (query = "") => apiRequest<any>(`/admin/analytics/events${query}`),
+    audience: (query = "") => apiRequest<any>(`/admin/analytics/audience${query}`),
+    sources: (query = "") => apiRequest<any>(`/admin/analytics/sources${query}`),
+    insights: (query = "") => apiRequest<any>(`/admin/analytics/insights${query}`),
+  },
   services: crud("/admin/services"),
   portfolio: crud("/admin/portfolio"),
   articles: crud("/admin/articles"),

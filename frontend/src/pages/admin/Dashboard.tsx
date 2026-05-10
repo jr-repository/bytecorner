@@ -7,23 +7,6 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { useEffect, useState } from "react";
 import { adminApi } from "@/lib/api";
 
-const TREND = [
-  { d: "Mon", v: 4200, p: 3100, s: 1800 },
-  { d: "Tue", v: 4800, p: 3600, s: 2100 },
-  { d: "Wed", v: 5400, p: 4100, s: 2400 },
-  { d: "Thu", v: 6100, p: 4700, s: 2700 },
-  { d: "Fri", v: 5800, p: 4500, s: 2500 },
-  { d: "Sat", v: 6400, p: 5000, s: 2900 },
-  { d: "Sun", v: 7100, p: 5400, s: 3200 },
-];
-const PAGES = [
-  { name: "/", v: 28592, c: "#6CC6CB" },
-  { name: "/services", v: 16421, c: "#4FB7C5" },
-  { name: "/portfolio", v: 13876, c: "#A7F3D0" },
-  { name: "/articles", v: 8358, c: "#FFD6A5" },
-  { name: "Others", v: 4000, c: "#EAE5C9" },
-];
-
 export default function Dashboard() {
   const { user } = useAuth();
   const { services, portfolio, articles } = useData();
@@ -31,8 +14,8 @@ export default function Dashboard() {
   useEffect(() => {
     adminApi.dashboard().then(setDashboard).catch(() => {});
   }, []);
-  const trend = dashboard?.trend || TREND;
-  const pages = dashboard?.topPages || PAGES;
+  const trend = dashboard?.trend || [];
+  const pages = dashboard?.topPages || [];
   const latestContent = dashboard?.latestContent || [
     ...services.slice(0, 2).map((s) => ({ t: s.title.id, type: "Service", date: "—", status: s.status })),
     ...portfolio.slice(0, 2).map((p) => ({ t: p.title.id, type: "Portfolio", date: p.date, status: p.status })),
@@ -40,10 +23,10 @@ export default function Dashboard() {
   ];
   const totals = dashboard?.totals;
   const stats = [
-    { label: "Total Visitors", value: "24,589", icon: Users, change: "+18.2%" },
-    { label: "Page Views", value: "71,247", icon: TrendingUp, change: "+21.4%" },
-    { label: "Projects Published", value: totals?.publishedPortfolio ?? portfolio.length, icon: FolderOpen, change: "+12.6%" },
-    { label: "Articles Published", value: totals?.publishedArticles ?? articles.length, icon: FileText, change: "+8.7%" },
+    { label: "Total Visitors", value: totals?.visitors ?? 0, icon: Users },
+    { label: "Page Views", value: totals?.pageViews ?? 0, icon: TrendingUp },
+    { label: "Projects Published", value: totals?.publishedPortfolio ?? portfolio.length, icon: FolderOpen },
+    { label: "Articles Published", value: totals?.publishedArticles ?? articles.length, icon: FileText },
   ];
   return (
     <>
@@ -62,7 +45,7 @@ export default function Dashboard() {
               <div className="size-9 rounded-xl bg-teal/15 grid place-items-center text-teal-deep"><s.icon className="size-4" /></div>
             </div>
             <p className="mt-3 font-display text-3xl font-bold">{s.value}</p>
-            <p className="mt-1 text-xs text-emerald-600">↑ {s.change} from last week</p>
+            <p className="mt-1 text-xs text-muted">Real database data</p>
           </div>
         ))}
       </div>
@@ -94,6 +77,7 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
           <ul className="space-y-1.5 text-xs">
+            {pages.length === 0 && <li className="text-muted">Belum ada data analytics.</li>}
             {pages.map((p: any) => (
               <li key={p.name} className="flex items-center justify-between"><span className="flex items-center gap-2"><span className="size-2 rounded-full" style={{ background: p.c }} />{p.name}</span><span className="text-muted">{p.v.toLocaleString()}</span></li>
             ))}

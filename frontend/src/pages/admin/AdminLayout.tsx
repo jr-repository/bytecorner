@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Briefcase, FolderOpen, FileText, Image as ImageIcon, Users, Sparkles, LogOut, Menu, X, Bell, Search, Building2, ChevronLeft, ExternalLink, UserCircle } from "lucide-react";
+import { LayoutDashboard, Briefcase, FolderOpen, FileText, Image as ImageIcon, Users, Sparkles, LogOut, Menu, X, Bell, Search, Building2, ChevronLeft, ExternalLink, UserCircle, BarChart3 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ const NAV = [
   { to: "/admin/logos", label: "Logos / Clients", icon: Building2 },
   { to: "/admin/users", label: "Users", icon: Users },
   { to: "/admin/profile", label: "Profile", icon: UserCircle },
+  { to: "/admin/analytics/overview", label: "Analytics", icon: BarChart3 },
   { to: "/admin/media-library", label: "Media Library", icon: ImageIcon },
   { to: "/admin/content-generator", label: "Content Generator", icon: Sparkles },
 ];

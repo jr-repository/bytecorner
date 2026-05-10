@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AdminUserController;
+use App\Http\Controllers\Api\Admin\AnalyticsController;
 use App\Http\Controllers\Api\Admin\ArticleController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\ClientLogoController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Api\Admin\MediaController;
 use App\Http\Controllers\Api\Admin\PortfolioController;
 use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Public\PublicContentController;
+use App\Http\Controllers\Api\Public\AnalyticsTrackingController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function (): void {
@@ -24,6 +26,7 @@ Route::get('articles', [PublicContentController::class, 'articles']);
 Route::get('articles/{slug}', [PublicContentController::class, 'article']);
 Route::get('client-logos', [PublicContentController::class, 'logos']);
 Route::get('stats', [PublicContentController::class, 'stats']);
+Route::post('analytics/track', AnalyticsTrackingController::class);
 
 Route::middleware('admin.token')->prefix('admin')->group(function (): void {
     Route::get('profile', [AuthController::class, 'profile']);
@@ -31,6 +34,15 @@ Route::middleware('admin.token')->prefix('admin')->group(function (): void {
     Route::post('profile/photo', [AuthController::class, 'updatePhoto']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('dashboard', DashboardController::class);
+    Route::prefix('analytics')->group(function (): void {
+        Route::get('overview', [AnalyticsController::class, 'overview']);
+        Route::get('traffic', [AnalyticsController::class, 'traffic']);
+        Route::get('pages', [AnalyticsController::class, 'pages']);
+        Route::get('events', [AnalyticsController::class, 'events']);
+        Route::get('audience', [AnalyticsController::class, 'audience']);
+        Route::get('sources', [AnalyticsController::class, 'sources']);
+        Route::get('insights', [AnalyticsController::class, 'insights']);
+    });
 
     Route::apiResource('services', ServiceController::class)->parameters(['services' => 'service']);
     Route::apiResource('portfolio', PortfolioController::class)->parameters(['portfolio' => 'portfolio']);
