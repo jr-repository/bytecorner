@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
 import { Linkedin, Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
+import { WHATSAPP_PHONE_DISPLAY, whatsappUrl } from "@/lib/whatsapp";
 
 export function Footer() {
   return (
@@ -44,7 +45,7 @@ export function Footer() {
           <div>
             <h4 className="font-display text-base font-semibold mb-4 text-ink">Hubungi Kami</h4>
             <ul className="space-y-3 text-sm text-ink/70">
-              <li className="flex gap-2"><Phone className="size-4 mt-0.5" /> +62 812-3456-7890</li>
+              <li><a href={whatsappUrl("Halo ByteCorner.id, saya ingin berkonsultasi.")} target="_blank" rel="noreferrer" className="flex gap-2 hover:text-teal-deep"><Phone className="size-4 mt-0.5" /> {WHATSAPP_PHONE_DISPLAY}</a></li>
               <li className="flex gap-2"><Mail className="size-4 mt-0.5" /> hello@bytecorner.id</li>
               <li className="flex gap-2"><MapPin className="size-4 mt-0.5" /> Jl. Sudirman No.123, Jakarta Selatan, Indonesia 12190</li>
             </ul>

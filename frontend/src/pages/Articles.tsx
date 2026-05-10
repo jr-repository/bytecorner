@@ -54,7 +54,7 @@ export default function Articles() {
       <section className="mx-auto max-w-7xl px-6 py-6">
         <h3 className="font-display text-2xl font-bold mb-6">{t("latest_articles")}</h3>
         <div className="grid lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2"><ArticleCard item={latest[0] || articles[0]} variant="featured" /></div>
+          {(latest[0] || articles[0]) && <div className="lg:col-span-2"><ArticleCard item={latest[0] || articles[0]} variant="featured" /></div>}
           <div className="space-y-3">{latest.slice(1, 4).map((a) => <ArticleCard key={a.id} item={a} variant="side" />)}</div>
         </div>
       </section>
@@ -62,7 +62,7 @@ export default function Articles() {
       <section className="mx-auto max-w-7xl px-6 py-10">
         <h3 className="font-display text-2xl font-bold mb-6">{t("popular_insights")}</h3>
         <div className="grid lg:grid-cols-3 gap-5">
-          <ArticleCard item={popular[0]} variant="dark" />
+          {popular[0] && <ArticleCard item={popular[0]} variant="dark" />}
           <div className="space-y-4">
             {popular.slice(1, 3).map((a) => <ArticleCard key={a.id} item={a} />)}
           </div>

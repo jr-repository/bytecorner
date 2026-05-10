@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Briefcase, FolderOpen, FileText, Image as ImageIcon, Users, Sparkles, LogOut, Menu, X, Bell, Search, Building2, ChevronLeft, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Briefcase, FolderOpen, FileText, Image as ImageIcon, Users, Sparkles, LogOut, Menu, X, Bell, Search, Building2, ChevronLeft, ExternalLink, UserCircle } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ const NAV = [
   { to: "/admin/articles", label: "Articles", icon: FileText },
   { to: "/admin/logos", label: "Logos / Clients", icon: Building2 },
   { to: "/admin/users", label: "Users", icon: Users },
+  { to: "/admin/profile", label: "Profile", icon: UserCircle },
   { to: "/admin/media-library", label: "Media Library", icon: ImageIcon },
   { to: "/admin/content-generator", label: "Content Generator", icon: Sparkles },
 ];
@@ -24,6 +25,7 @@ export default function AdminLayout() {
   const loc = useLocation();
   const title =
     NAV.find((n) => (n.end ? loc.pathname === n.to : loc.pathname.startsWith(n.to)))?.label || "Dashboard";
+  const avatar = user?.avatar || `https://i.pravatar.cc/120?u=${user?.email || "bytecorner"}`;
 
   const renderNav = (onClick?: () => void) =>
     NAV.map((n) => (
@@ -56,7 +58,7 @@ export default function AdminLayout() {
       {/* Sidebar desktop */}
       <aside
         className={cn(
-          "hidden lg:flex flex-col glass-strong m-3 rounded-3xl p-4 transition-all duration-300 sticky top-3 self-start max-h-[calc(100vh-1.5rem)]",
+          "hidden lg:flex flex-col glass-strong p-4 transition-all duration-300 sticky top-0 self-start h-screen rounded-none",
           collapsed ? "w-[88px]" : "w-64"
         )}
       >
@@ -139,7 +141,7 @@ export default function AdminLayout() {
               <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-teal-deep ring-2 ring-white" />
             </button>
             <div className="flex items-center gap-2 rounded-full bg-white pl-1 pr-3 py-1 border border-ink/5">
-              <img src={user?.avatar} alt="" className="size-7 rounded-full object-cover" />
+              <img src={avatar} alt="" className="size-7 rounded-full object-cover" />
               <div className="hidden sm:block leading-tight">
                 <p className="text-xs font-semibold">{user?.name}</p>
                 <p className="text-[10px] text-muted">{user?.role}</p>

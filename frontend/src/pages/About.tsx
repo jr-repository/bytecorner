@@ -22,7 +22,7 @@ export default function About() {
       />
       <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80" alt="" className="rounded-3xl w-full object-cover aspect-[4/3]" />
+          <img src="https://gallery.bytecorner.site/uploads/2026-05-10/1cba393860b8e9a5f80b5a4690b0a9b4_1778400657.png" alt="" className="rounded-3xl w-full object-cover aspect-[4/3]" />
           <div>
             <SectionHeader eyebrow="Our Story" title={lang === "id" ? "Cerita di balik ByteCorner.id" : "The story behind ByteCorner.id"} subtitle={lang === "id" ? "Berdiri sejak 2019, kami telah membantu lebih dari 100 brand membangun kehadiran digital yang berdampak. Setiap proyek adalah perjalanan kolaborasi." : "Since 2019, we've helped 100+ brands build impactful digital presence. Every project is a collaborative journey."} />
             <div className="mt-6 grid grid-cols-2 gap-4">
@@ -72,7 +72,7 @@ export default function About() {
               <img src={BYTECORNER_LOGO} alt="ByteCorner.id Logo" className="relative w-3/5 object-contain animate-float drop-shadow-xl" />
             </div>
             <div className="absolute -bottom-4 -right-4 size-24 rounded-3xl bg-teal-gradient shadow-brand opacity-90 hidden md:block" />
-            <div className="absolute -top-4 -left-4 size-16 rounded-2xl bg-cream shadow-lg hidden md:block" />
+            {/* <div className="absolute -top-4 -left-4 size-16 rounded-2xl bg-ink shadow-lg hidden md:block" /> */}
           </div>
           <div className="lg:col-span-3 space-y-5">
             <GlassCard>
@@ -121,13 +121,11 @@ export default function About() {
           <div className="relative rounded-3xl bg-brand-gradient p-8 overflow-hidden">
             <div className="absolute -right-10 -top-10 size-48 rounded-full bg-white/30 blur-2xl" />
             <div className="relative">
-              <div className="size-12 rounded-2xl glass-strong grid place-items-center mb-4"><Eye className="size-5 text-teal-deep" /></div>
               <h3 className="font-display text-2xl font-bold">{lang === "id" ? "Visi" : "Vision"}</h3>
               <p className="mt-3 text-ink/80 leading-relaxed">{lang === "id" ? "Menjadi mitra digital terpercaya yang membantu brand Indonesia tumbuh dan bersaing di panggung global melalui teknologi dan kreativitas." : "To become a trusted digital partner that helps Indonesian brands grow and compete globally through technology and creativity."}</p>
             </div>
           </div>
           <GlassCard className="!p-8">
-            <div className="size-12 rounded-2xl bg-teal-gradient text-white grid place-items-center mb-4"><Target className="size-5" /></div>
             <h3 className="font-display text-2xl font-bold">{lang === "id" ? "Misi" : "Mission"}</h3>
             <ul className="mt-4 space-y-3">
               {[
@@ -235,7 +233,7 @@ export default function About() {
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-teal-deep">Founder & CEO</p>
-                <h3 className="mt-1 font-display text-2xl font-bold">Rizky Prasetya</h3>
+                <h3 className="mt-1 font-display text-2xl font-bold">BytePoeople.</h3>
                 <p className="mt-2 text-sm text-ink/70 leading-relaxed">{lang === "id" ? "“Kami percaya teknologi terbaik adalah yang membuat bisnis tumbuh tanpa kompromi pada estetika dan pengalaman pengguna.”" : "“We believe the best technology grows businesses without compromising aesthetics and user experience.”"}</p>
                 <div className="mt-4 flex gap-2">
                   <a href="#" className="size-9 rounded-full glass grid place-items-center hover:bg-white"><Linkedin className="size-4 text-teal-deep" /></a>
@@ -276,7 +274,11 @@ export default function About() {
           <div className="absolute -left-20 -bottom-20 size-72 rounded-full bg-cream blur-3xl opacity-30" />
           <div className="relative grid lg:grid-cols-[1.4fr_1fr] gap-8 items-center">
             <div>
-              <SectionLabel>{lang === "id" ? "Siap Berkembang?" : "Ready to grow?"}</SectionLabel>
+              <SectionLabel>
+                <span className="text-white">
+                  {lang === "id" ? "Siap Berkembang?" : "Ready to grow?"}
+                </span>
+              </SectionLabel>              
               <h3 className="mt-4 font-display text-3xl md:text-4xl font-bold leading-tight">
                 {lang === "id" ? <>Wujudkan brand digital Anda <span className="text-teal-gradient">bersama ByteCorner</span></> : <>Build your digital brand <span className="text-teal-gradient">with ByteCorner</span></>}
               </h3>

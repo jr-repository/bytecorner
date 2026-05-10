@@ -1,35 +1,84 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { storage, type AdminUser } from "@/lib/storage";
-import { useData } from "./DataContext";
+import type { AdminUser } from "@/lib/storage";
+import { authApi, getCachedUser, getToken, setCachedUser, setToken } from "@/lib/api";
 
 interface AuthCtx {
   user: AdminUser | null;
-  login: (email: string, password: string) => string | null; // null on success, error msg on fail
-  signup: (name: string, email: string, password: string) => string | null;
-  logout: () => void;
+  token: string | null;
+  login: (email: string, password: string) => Promise<string | null>;
+  signup: (name: string, email: string, password: string) => Promise<string | null>;
+  updateProfile: (payload: Partial<AdminUser> & { password?: string; avatar?: string }) => Promise<string | null>;
+  logout: () => Promise<void>;
 }
 
 const Ctx = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { users, setUsers } = useData();
-  const [user, setUser] = useState<AdminUser | null>(() => storage.get<AdminUser | null>("auth", null));
+  const [tokenState, setTokenState] = useState<string | null>(() => getToken());
+  const [user, setUser] = useState<AdminUser | null>(() => getCachedUser<AdminUser>());
 
-  useEffect(() => { storage.set("auth", user); }, [user]);
+  useEffect(() => {
+    let alive = true;
+    if (!tokenState) return;
+    authApi.profile()
+      .then((profile) => {
+        if (!alive) return;
+        setUser(profile);
+        setCachedUser(profile);
+      })
+      .catch(() => {
+        if (!alive) return;
+        setToken(null);
+        setTokenState(null);
+        setUser(null);
+        setCachedUser(null);
+      });
+    return () => { alive = false; };
+  }, [tokenState]);
 
-  const login = (email: string, password: string) => {
-    const u = users.find((x) => x.email.toLowerCase() === email.toLowerCase() && x.password === password);
-    if (!u) return "Invalid credentials";
-    setUser(u); return null;
+  const login = async (email: string, password: string) => {
+    try {
+      const data = await authApi.login(email, password);
+      setToken(data.token);
+      setTokenState(data.token);
+      setUser(data.user);
+      setCachedUser(data.user);
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : "Invalid credentials";
+    }
   };
-  const signup = (name: string, email: string, password: string) => {
-    if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) return "Email already registered";
-    const u: AdminUser = { id: "u" + Date.now(), name, email, password, role: "Editor", avatar: `https://i.pravatar.cc/120?u=${email}` };
-    setUsers([...users, u]); setUser(u); return null;
+  const signup = async (name: string, email: string, password: string) => {
+    try {
+      const data = await authApi.signup(name, email, password);
+      setToken(data.token);
+      setTokenState(data.token);
+      setUser(data.user);
+      setCachedUser(data.user);
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : "Unable to create account";
+    }
   };
-  const logout = () => setUser(null);
+  const logout = async () => {
+    try { if (tokenState) await authApi.logout(); } catch {}
+    setToken(null);
+    setTokenState(null);
+    setUser(null);
+    setCachedUser(null);
+  };
+  const updateProfile = async (payload: Partial<AdminUser> & { password?: string; avatar?: string }) => {
+    try {
+      const updated = await authApi.updateProfile({ ...user, ...payload, role: payload.role || user?.role || "Editor", status: (payload as any).status || "active" });
+      setUser(updated);
+      setCachedUser(updated);
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : "Unable to update profile";
+    }
+  };
 
-  return <Ctx.Provider value={{ user, login, signup, logout }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ user, token: tokenState, login, signup, updateProfile, logout }}>{children}</Ctx.Provider>;
 }
 
 export function useAuth() {

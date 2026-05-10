@@ -5,15 +5,18 @@ import { useLang } from "@/contexts/LangContext";
 import { Hero } from "@/components/Hero";
 import { GlassCard, SectionLabel } from "@/components/GlassCard";
 import { LinkButton } from "@/components/Button";
+import { portfolioWhatsappUrl } from "@/lib/whatsapp";
 
 export default function PortfolioDetail() {
   const { slug } = useParams();
-  const { portfolio } = useData();
+  const { portfolio, loading } = useData();
   const { pick } = useLang();
   const item = portfolio.find((p) => p.slug === slug);
   const [active, setActive] = useState(0);
+  if (!item && loading) return null;
   if (!item) return <Navigate to="/portfolio" replace />;
   const related = portfolio.filter((p) => p.id !== item.id).slice(0, 3);
+  const waUrl = portfolioWhatsappUrl(item, pick(item.title));
 
   return (
     <>
@@ -79,7 +82,7 @@ export default function PortfolioDetail() {
           )}
           <div className="rounded-3xl bg-teal-gradient text-white p-6">
             <h4 className="font-display font-bold">Punya proyek serupa?</h4>
-            <LinkButton to="/contact" variant="outline" arrow className="mt-3 !bg-white !text-ink">Hubungi Kami</LinkButton>
+            <a href={waUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 whitespace-nowrap glass text-ink hover:bg-white px-6 py-2.5 text-sm !bg-white !text-ink">Hubungi Kami</a>
           </div>
         </aside>
       </section>

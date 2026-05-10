@@ -10,9 +10,9 @@ export default function Login() {
   const nav = useNavigate();
   const [email, setEmail] = useState("admin@bytecorner.id");
   const [password, setPassword] = useState("admin123");
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const err = login(email, password);
+    const err = await login(email, password);
     if (err) toast.error(err); else { toast.success("Welcome back!"); nav("/admin"); }
   };
   return (

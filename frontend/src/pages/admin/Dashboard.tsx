@@ -4,6 +4,8 @@ import { Users, FolderOpen, FileText, TrendingUp, Sparkles, LayoutDashboard } fr
 import { LineChart, Line, ResponsiveContainer, Tooltip, XAxis, PieChart, Pie, Cell } from "recharts";
 import { Logo } from "@/components/Logo";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useEffect, useState } from "react";
+import { adminApi } from "@/lib/api";
 
 const TREND = [
   { d: "Mon", v: 4200, p: 3100, s: 1800 },
@@ -25,11 +27,23 @@ const PAGES = [
 export default function Dashboard() {
   const { user } = useAuth();
   const { services, portfolio, articles } = useData();
+  const [dashboard, setDashboard] = useState<any>(null);
+  useEffect(() => {
+    adminApi.dashboard().then(setDashboard).catch(() => {});
+  }, []);
+  const trend = dashboard?.trend || TREND;
+  const pages = dashboard?.topPages || PAGES;
+  const latestContent = dashboard?.latestContent || [
+    ...services.slice(0, 2).map((s) => ({ t: s.title.id, type: "Service", date: "—", status: s.status })),
+    ...portfolio.slice(0, 2).map((p) => ({ t: p.title.id, type: "Portfolio", date: p.date, status: p.status })),
+    ...articles.slice(0, 2).map((a) => ({ t: a.title.id, type: "Article", date: a.date, status: a.status })),
+  ];
+  const totals = dashboard?.totals;
   const stats = [
     { label: "Total Visitors", value: "24,589", icon: Users, change: "+18.2%" },
     { label: "Page Views", value: "71,247", icon: TrendingUp, change: "+21.4%" },
-    { label: "Projects Published", value: portfolio.length, icon: FolderOpen, change: "+12.6%" },
-    { label: "Articles Published", value: articles.length, icon: FileText, change: "+8.7%" },
+    { label: "Projects Published", value: totals?.publishedPortfolio ?? portfolio.length, icon: FolderOpen, change: "+12.6%" },
+    { label: "Articles Published", value: totals?.publishedArticles ?? articles.length, icon: FileText, change: "+8.7%" },
   ];
   return (
     <>
@@ -61,7 +75,7 @@ export default function Dashboard() {
           </div>
           <div className="h-64">
             <ResponsiveContainer>
-              <LineChart data={TREND}>
+              <LineChart data={trend}>
                 <XAxis dataKey="d" stroke="#9ca3af" fontSize={11} />
                 <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e5e7eb" }} />
                 <Line type="monotone" dataKey="v" stroke="#6CC6CB" strokeWidth={2.5} dot={false} />
@@ -76,11 +90,11 @@ export default function Dashboard() {
           <h3 className="font-display font-semibold mb-4">Top Pages</h3>
           <div className="h-40 relative">
             <ResponsiveContainer>
-              <PieChart><Pie data={PAGES} dataKey="v" nameKey="name" innerRadius={45} outerRadius={70} paddingAngle={2}>{PAGES.map((p, i) => <Cell key={i} fill={p.c} />)}</Pie></PieChart>
+              <PieChart><Pie data={pages} dataKey="v" nameKey="name" innerRadius={45} outerRadius={70} paddingAngle={2}>{pages.map((p: any, i: number) => <Cell key={i} fill={p.c} />)}</Pie></PieChart>
             </ResponsiveContainer>
           </div>
           <ul className="space-y-1.5 text-xs">
-            {PAGES.map((p) => (
+            {pages.map((p: any) => (
               <li key={p.name} className="flex items-center justify-between"><span className="flex items-center gap-2"><span className="size-2 rounded-full" style={{ background: p.c }} />{p.name}</span><span className="text-muted">{p.v.toLocaleString()}</span></li>
             ))}
           </ul>
@@ -93,10 +107,8 @@ export default function Dashboard() {
           <table className="w-full text-sm">
             <thead className="text-xs text-muted text-left"><tr><th className="py-2">Title</th><th>Type</th><th>Status</th><th>Date</th></tr></thead>
             <tbody>
-              {[...services.slice(0, 2).map((s) => ({ t: s.title.id, type: "Service", date: "—", status: s.status })),
-                ...portfolio.slice(0, 2).map((p) => ({ t: p.title.id, type: "Portfolio", date: p.date, status: p.status })),
-                ...articles.slice(0, 2).map((a) => ({ t: a.title.id, type: "Article", date: a.date, status: a.status }))]
-                .map((r, i) => (
+              {latestContent
+                .map((r: any, i: number) => (
                   <tr key={i} className="border-t border-ink/5"><td className="py-2.5 font-medium line-clamp-1">{r.t}</td><td className="text-muted">{r.type}</td><td><span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${r.status === "published" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>{r.status}</span></td><td className="text-muted text-xs">{r.date}</td></tr>
                 ))}
             </tbody>

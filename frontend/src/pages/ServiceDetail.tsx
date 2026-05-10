@@ -6,15 +6,18 @@ import { GlassCard, SectionHeader, SectionLabel } from "@/components/GlassCard";
 import { LinkButton } from "@/components/Button";
 import { Check } from "lucide-react";
 import { useState } from "react";
+import { serviceWhatsappUrl } from "@/lib/whatsapp";
 
 export default function ServiceDetail() {
   const { slug } = useParams();
-  const { services } = useData();
+  const { services, loading } = useData();
   const { pick, lang } = useLang();
   const s = services.find((x) => x.slug === slug);
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
+  if (!s && loading) return null;
   if (!s) return <Navigate to="/services" replace />;
   const related = services.filter((x) => x.id !== s.id).slice(0, 3);
+  const waUrl = serviceWhatsappUrl(s, pick(s.title));
 
   return (
     <>
@@ -23,7 +26,7 @@ export default function ServiceDetail() {
         eyebrow={<SectionLabel>{s.category}</SectionLabel>}
         title={<>{pick(s.title)}</>}
         subtitle={pick(s.excerpt)}
-        actions={<LinkButton to="/contact" arrow>Konsultasi Gratis</LinkButton>}
+        actions={<a href={waUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 whitespace-nowrap bg-teal-gradient text-white shadow-brand hover:shadow-lg hover:-translate-y-0.5 px-6 py-2.5 text-sm">Konsultasi Gratis</a>}
         visual={<img src={s.image} alt="" className="rounded-3xl w-full max-h-[420px] object-cover" />}
       />
       <section className="mx-auto max-w-7xl px-6 py-14 grid lg:grid-cols-3 gap-8">
@@ -64,7 +67,7 @@ export default function ServiceDetail() {
           <div className="rounded-3xl bg-teal-gradient text-white p-6">
             <h4 className="font-display text-lg font-bold">Mulai proyek Anda</h4>
             <p className="mt-1 text-sm text-white/90">Diskusi gratis dengan tim kami.</p>
-            <LinkButton to="/contact" variant="outline" arrow className="mt-4 !bg-white !text-ink">Hubungi Kami</LinkButton>
+            <a href={waUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 whitespace-nowrap glass text-ink hover:bg-white px-6 py-2.5 text-sm !bg-white !text-ink">Hubungi Kami</a>
           </div>
         </aside>
       </section>

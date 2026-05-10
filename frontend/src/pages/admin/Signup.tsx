@@ -11,9 +11,9 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const err = signup(name, email, password);
+    const err = await signup(name, email, password);
     if (err) toast.error(err); else { toast.success("Account created"); nav("/admin"); }
   };
   return (

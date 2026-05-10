@@ -7,9 +7,10 @@ import { ArticleCard } from "@/components/Cards";
 
 export default function ArticleDetail() {
   const { slug } = useParams();
-  const { articles } = useData();
+  const { articles, loading } = useData();
   const { pick, lang, t } = useLang();
   const a = articles.find((x) => x.slug === slug);
+  if (!a && loading) return null;
   if (!a) return <Navigate to="/articles" replace />;
   const related = articles.filter((x) => x.id !== a.id && x.category === a.category).slice(0, 3);
 

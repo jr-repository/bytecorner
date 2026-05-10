@@ -5,14 +5,28 @@ import { useLang } from "@/contexts/LangContext";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useData } from "@/contexts/DataContext";
+import { WHATSAPP_PHONE_DISPLAY, whatsappUrl } from "@/lib/whatsapp";
 
 export default function Contact() {
-  const { lang } = useLang();
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const { lang, pick } = useLang();
+  const { services } = useData();
+  const [form, setForm] = useState({ name: "", email: "", subject: "", service: "", message: "" });
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(lang === "id" ? "Pesan terkirim! Tim kami akan menghubungi Anda." : "Message sent! Our team will reach out shortly.");
-    setForm({ name: "", email: "", subject: "", message: "" });
+    const service = form.service || "Other";
+    const message = [
+      "Halo ByteCorner.id, saya ingin berkonsultasi.",
+      "",
+      `Nama: ${form.name}`,
+      `Email: ${form.email}`,
+      `Service: ${service}`,
+      `Subject: ${form.subject || "-"}`,
+      `Pesan: ${form.message}`,
+    ].join("\n");
+    window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
+    toast.success(lang === "id" ? "WhatsApp dibuka dengan pesan Anda." : "WhatsApp opened with your message.");
+    setForm({ name: "", email: "", subject: "", service: "", message: "" });
   };
   return (
     <>
@@ -34,7 +48,7 @@ export default function Contact() {
           </GlassCard>
           <GlassCard>
             <h4 className="font-display font-semibold">Phone</h4>
-            <p className="mt-2 text-sm flex gap-2"><Phone className="size-4 mt-0.5 text-teal-deep" />+62 812-3456-7890</p>
+            <a href={whatsappUrl("Halo ByteCorner.id, saya ingin berkonsultasi.")} target="_blank" rel="noreferrer" className="mt-2 text-sm flex gap-2 hover:text-teal-deep"><Phone className="size-4 mt-0.5 text-teal-deep" />{WHATSAPP_PHONE_DISPLAY}</a>
           </GlassCard>
         </div>
         <div className="lg:col-span-2">
@@ -43,6 +57,10 @@ export default function Contact() {
               <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required placeholder="Nama" className="rounded-xl border border-ink/10 px-4 py-3 bg-white text-sm" />
               <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required type="email" placeholder="Email" className="rounded-xl border border-ink/10 px-4 py-3 bg-white text-sm" />
               <input value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} placeholder="Subject" className="sm:col-span-2 rounded-xl border border-ink/10 px-4 py-3 bg-white text-sm" />
+              <select value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="sm:col-span-2 rounded-xl border border-ink/10 px-4 py-3 bg-white text-sm">
+                <option value="">Other</option>
+                {services.map((service) => <option key={service.id} value={pick(service.title)}>{pick(service.title)}</option>)}
+              </select>
               <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required placeholder="Pesan Anda" rows={6} className="sm:col-span-2 rounded-xl border border-ink/10 px-4 py-3 bg-white text-sm" />
               <div className="sm:col-span-2"><Button type="submit" arrow>Kirim Pesan</Button></div>
             </form>

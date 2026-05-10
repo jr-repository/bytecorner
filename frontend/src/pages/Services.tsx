@@ -34,7 +34,7 @@ export default function Services() {
         actions={<LinkButton to="/contact" arrow>{t("cta_consult")}</LinkButton>}
         visual={
           <div className="relative">
-            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=900&q=80" alt="" className="rounded-3xl w-full" />
+            <img src="https://gallery.bytecorner.site/uploads/2026-05-10/57a1f6bf6a1200165afc00e7a2d8dc16_1778398000.png" alt="" className="rounded-3xl w-full" />
             <div className="absolute -bottom-4 -left-4 glass-strong rounded-2xl px-4 py-3 animate-float">
               <p className="text-xs text-muted">Business Growth</p>
               <p className="font-display text-xl font-bold text-teal-deep">+127%</p>

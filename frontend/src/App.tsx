@@ -27,18 +27,19 @@ import AdminLogos from "@/pages/admin/AdminLogos";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminMedia from "@/pages/admin/AdminMedia";
 import AdminIG from "@/pages/admin/AdminIG";
+import AdminProfile from "@/pages/admin/AdminProfile";
 
 function RequireAuth() {
-  const { user } = useAuth();
-  if (!user) return <Navigate to="/admin/login" replace />;
+  const { user, token } = useAuth();
+  if (!user && !token) return <Navigate to="/admin/login" replace />;
   return <Outlet />;
 }
 
 export default function App() {
   return (
     <LangProvider>
-      <DataProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <DataProvider>
           <Toaster richColors position="top-right" />
           <Routes>
             <Route element={<PublicLayout />}>
@@ -64,6 +65,7 @@ export default function App() {
                 <Route path="articles" element={<AdminArticles />} />
                 <Route path="logos" element={<AdminLogos />} />
                 <Route path="users" element={<AdminUsers />} />
+                <Route path="profile" element={<AdminProfile />} />
                 <Route path="media" element={<AdminMedia />} />
                 <Route path="media-library" element={<AdminMedia />} />
                 <Route path="ig" element={<AdminIG />} />
@@ -74,8 +76,8 @@ export default function App() {
 
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </AuthProvider>
-      </DataProvider>
+        </DataProvider>
+      </AuthProvider>
     </LangProvider>
   );
 }

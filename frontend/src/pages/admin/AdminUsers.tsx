@@ -15,8 +15,8 @@ export default function AdminUsers() {
 
   const save = () => {
     if (!editing) return;
-    if (!editing.name || !editing.email || !editing.password) return toast.error("All fields required");
     const exists = users.some((u) => u.id === editing.id);
+    if (!editing.name || !editing.email || (!exists && !editing.password)) return toast.error("All fields required");
     setUsers(exists ? users.map((u) => (u.id === editing.id ? editing : u)) : [...users, editing]);
     setEditing(null);
     toast.success("Saved");

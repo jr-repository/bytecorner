@@ -41,7 +41,7 @@ export default function Home() {
         visual={
           <div className="relative">
             <div className="relative rounded-3xl glass-strong p-3 animate-float-slow">
-              <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=900&q=80" alt="" className="rounded-2xl w-full" />
+              <img src="https://gallery.bytecorner.site/uploads/2026-05-10/57a1f6bf6a1200165afc00e7a2d8dc16_1778398000.png" alt="" className="rounded-2xl w-full" />
             </div>
             <div className="absolute -bottom-6 -left-4 glass-strong rounded-2xl p-4 w-48 animate-float">
               <p className="text-xs text-muted">Project Completed</p>
@@ -107,9 +107,9 @@ export default function Home() {
             <LinkButton to="/about" variant="outline" arrow className="mt-6">{lang === "id" ? "Lebih Lanjut" : "Learn More"}</LinkButton>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" className="rounded-2xl row-span-2 h-full object-cover" alt="" />
-            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=400&q=80" className="rounded-2xl object-cover" alt="" />
-            <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80" className="rounded-2xl object-cover" alt="" />
+            <img src="https://gallery.bytecorner.site/uploads/2026-05-10/d5f08c30e653ac4b2b4587dcff1f9e00_1778399588.png" className="rounded-2xl row-span-2 h-full object-cover" alt="" />
+            <img src="https://gallery.bytecorner.site/uploads/2026-05-10/9a0d9f87a2fe95e516bf5aab1f0ad944_1778398789.png" className="rounded-2xl object-cover" alt="" />
+            <img src="https://gallery.bytecorner.site/uploads/2026-05-10/b1346afc7077f925b08da5c927889b85_1778399276.png" className="rounded-2xl object-cover" alt="" />
           </div>
         </div>
       </section>
@@ -144,7 +144,7 @@ export default function Home() {
           <LinkButton to="/portfolio" variant="outline" arrow size="sm">{lang === "id" ? "Lihat Semua" : "View All"}</LinkButton>
         </div>
         <div className="grid lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2"><PortfolioCard item={featuredPortfolio} variant="featured" /></div>
+          {featuredPortfolio && <div className="lg:col-span-2"><PortfolioCard item={featuredPortfolio} variant="featured" /></div>}
           <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-5">
             {restPortfolio.slice(0, 2).map((p) => <PortfolioCard key={p.id} item={p} variant="compact" />)}
           </div>
