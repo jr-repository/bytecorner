@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         AdminUser::updateOrCreate(
             ['email' => 'admin@bytecorner.id'],
             [
-                'name' => 'Ahmad Fadly',
+                'name' => 'ByteAdmin',
                 'password' => 'admin123',
                 'role' => 'Super Admin',
                 'profile_photo' => 'https://i.pravatar.cc/120?img=12',
@@ -252,7 +252,7 @@ class DatabaseSeeder extends Seeder
                 'content_id' => '<p>Brand awareness adalah fondasi penting.</p><h2>1. Konten yang Konsisten</h2><p>Konsistensi membangun kepercayaan.</p><ul><li>Tetapkan jadwal posting</li><li>Pertahankan tone of voice</li></ul>',
                 'content_en' => '<p>Brand awareness is the foundation.</p><h2>1. Consistent Content</h2><p>Consistency builds trust.</p><ul><li>Set a posting schedule</li><li>Maintain tone of voice</li></ul>',
                 'category' => 'Digital Marketing',
-                'author' => 'Ahmad Fadly',
+                'author' => 'ByteAdmin',
                 'author_avatar' => 'https://i.pravatar.cc/120?img=12',
                 'published_date' => '2024-05-15',
                 'reading_time' => 5,
@@ -290,7 +290,7 @@ class DatabaseSeeder extends Seeder
                 'content_id' => '<p>Tahun 2024 membawa banyak inovasi untuk performa, keamanan, dan DX.</p>',
                 'content_en' => '<p>2024 brings many innovations for performance, security, and DX.</p>',
                 'category' => 'Industry Trend',
-                'author' => 'Ahmad Fadly',
+                'author' => 'ByteAdmin',
                 'author_avatar' => 'https://i.pravatar.cc/120?img=12',
                 'published_date' => '2024-05-10',
                 'reading_time' => 6,
